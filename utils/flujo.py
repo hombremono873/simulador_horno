@@ -100,13 +100,14 @@ def simular():
     temperaturas = []
 
     try:
-        with Live(refresh_per_second=4) as live:
+        with Live(screen=True,refresh_per_second=4) as live:
             while True:
                 start_time = time.time()
 
                 # ░▒▓ PID ▓▒░
                 error = var.T_SET - T + get_ruido(t)
                 u, integral, error_prev = pid.calcular_pid(error, error_prev, integral)
+                
                 T = horno.simular_horno(T, u)
                 tiempos.append(t)
                 temperaturas.append(T)
@@ -116,10 +117,10 @@ def simular():
                 live.update(tabla)
 
                 # 📉 Gráfica PID
-                #call_grafica_pid(tiempos, temperaturas)
+                call_grafica_pid(tiempos, temperaturas)
 
                 # 📷 Imagen térmica
-                call_imagen_termica(T)
+                #call_imagen_termica(T)
 
                 # ⏱️ Control de tiempo
                 t += 1
