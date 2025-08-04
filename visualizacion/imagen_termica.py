@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import config.horno_config as var
+import config.Variables_Horno.horno_config as var
 import matplotlib.colors as mcolors
 import matplotlib.cm as cm
 
@@ -80,3 +80,24 @@ def actualizar_imagen_termica(fig, ax, temp):
     ax.set_ylabel("Tiempo")
     fig.canvas.draw()
     fig.canvas.flush_events()
+    
+def call_imagen_termica(T):
+    global flag_imagen, fig_imagen, ax_imagen
+
+    # Verificar si la figura fue cerrada manualmente
+    try:
+        if fig_imagen is not None:
+            fig_imagen.canvas.get_renderer()  # lanza error si fue cerrada
+    except Exception:
+        fig_imagen, ax_imagen = None, None
+        flag_imagen = True
+        print("📷 Imagen térmica cerrada manualmente.")
+
+    # Crear figura si es necesario
+    if flag_imagen:
+        fig_imagen, ax_imagen = configurar_imagen_termica()
+        flag_imagen = False
+
+    # Actualizar si figura aún existe
+    if fig_imagen is not None:
+        actualizar_imagen_termica(fig_imagen, ax_imagen, T)
